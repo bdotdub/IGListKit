@@ -382,37 +382,35 @@
     IGListAdapter *adapter = [[IGListAdapter alloc] initWithUpdater:updater viewController:nil workingRangeSize:1];
     id collectionView = [OCMockObject niceMockForClass:[UICollectionView class]];
     adapter.collectionView = collectionView;
-    
+
     id mockWorkingRangeDelegate1 = [OCMockObject mockForProtocol:@protocol(IGListWorkingRangeDelegate)];
     id mockWorkingRangeDelegate2 = [OCMockObject mockForProtocol:@protocol(IGListWorkingRangeDelegate)];
-    
+
     adapter.dataSource = ds;
     controller1.workingRangeDelegate = mockWorkingRangeDelegate1;
     controller2.workingRangeDelegate = mockWorkingRangeDelegate2;
-    
+
     // Arrange 2: Force an update so we get the objects we configured through the system.
     [adapter performUpdatesAnimated:NO completion:nil];
-    
+
     // Arrange 3: Tell the working range handler that the first item in the list will be displayed.
     [[mockWorkingRangeDelegate1 expect] listAdapter:adapter sectionControllerWillEnterWorkingRange:controller1];
     [[mockWorkingRangeDelegate2 expect] listAdapter:adapter sectionControllerWillEnterWorkingRange:controller2];
     [adapter.workingRangeHandler willDisplayItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] forListAdapter:adapter];
-    
+
     [mockWorkingRangeDelegate1 verifyWithDelay:5];
     [mockWorkingRangeDelegate2 verifyWithDelay:5];
-    
+
     // Act: Tell the working range handler that the second item in the list will be displayed.
     [[mockWorkingRangeDelegate1 reject] listAdapter:[OCMArg any] sectionControllerWillEnterWorkingRange:[OCMArg any]];
     [[mockWorkingRangeDelegate2 reject] listAdapter:[OCMArg any] sectionControllerWillEnterWorkingRange:[OCMArg any]];
     [adapter.workingRangeHandler willDisplayItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1] forListAdapter:adapter];
-    
+
     [mockWorkingRangeDelegate1 verifyWithDelay:5];
     [mockWorkingRangeDelegate2 verifyWithDelay:5];
 }
 
-- (void)test_whenDisplayingItemsAtPaths_withWorkingRangeSizeZero_thenRemovingFirstItem_thenInsertingItemAtLastPosition_thatItemEntersWorkingRange {
-    return; // This test currently fails; working range calculations do not take inserts + deletes into account.
-    
+- (void)DISABLED_test_whenDisplayingItemsAtPaths_withWorkingRangeSizeZero_thenRemovingFirstItem_thenInsertingItemAtLastPosition_thatItemEntersWorkingRange {
     // Arrange 1: Set up a simple collection view and adapter with a single element.
     IGListTestSection *controller1 = [[IGListTestSection alloc] init];
     NSString *object1 = @"obj1";
@@ -460,9 +458,7 @@
     [mockWorkingRangeDelegate2 verifyWithDelay:5];
 }
 
-- (void)test_whenDisplayingItemAtPath_withWorkingRangeSizeZero_thenInsertingNewItem_thatVisibleItemsRemainInWorkingRange {
-    return; // This test currently fails; working range calculations do not take inserts + deletes into account.
-    
+- (void)DISABLED_test_whenDisplayingItemAtPath_withWorkingRangeSizeZero_thenInsertingNewItem_thatVisibleItemsRemainInWorkingRange {
     // Arrange 1: Set up a simple collection view and adapter with a single element.
     IGListTestSection *controller1 = [[IGListTestSection alloc] init];
     NSString *object1 = @"obj1";
